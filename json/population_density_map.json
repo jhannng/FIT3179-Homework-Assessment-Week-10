@@ -1,0 +1,115 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 800,
+    "height": 600,
+    "layer": [
+        {
+            "mark": {
+                "type": "geoshape",
+                "fill": "lightblue"
+            },
+            "data": {
+                "sphere": true
+            },
+            "projection": {
+                "type": "mercator",
+                "scale": 1500,
+                "center": [
+                    110,
+                    3.5
+                ],
+                "clipAngle": 90
+            }
+        },
+        {
+            "mark": {
+                "type": "geoshape",
+                "stroke": "gray",
+                "strokeWidth": 0.3
+            },
+            "data": {
+                "graticule": true
+            },
+            "projection": {
+                "type": "mercator",
+                "scale": 350,
+                "center": [
+                    110,
+                    3.5
+                ]
+            }
+        },
+        {
+            "data": {
+                "url": "https://raw.githubusercontent.com/jhannng/FIT3179-Homework-Assessment-9/main/malaysia-states.topojson",
+                "format": {
+                    "type": "topojson",
+                    "feature": "states"
+                }
+            },
+            "transform": [
+                {
+                    "lookup": "properties.Name",
+                    "from": {
+                        "data": {
+                            "url": "https://raw.githubusercontent.com/jhannng/FIT3179-Homework-Assessment-9/main/data/population_state.csv"
+                        },
+                        "key": "State",
+                        "fields": [
+                            "Population",
+                            "Area"
+                        ]
+                    }
+                },
+                {
+                    "calculate": "datum.Population / datum.Area",
+                    "as": "Population_Density"
+                }
+            ],
+            "projection": {
+                "type": "mercator",
+                "center": [
+                    110,
+                    3.5
+                ]
+            },
+            "mark": {
+                "type": "geoshape",
+                "stroke": "white",
+                "strokeWidth": 0.5
+            },
+            "encoding": {
+                "color": {
+                    "field": "Population_Density",
+                    "type": "quantitative",
+                    "scale": {
+                        "type": "log",
+                        "scheme": "reds"
+                    },
+                    "legend": {
+                        "title": "Population Density (per km²)"
+                    }
+                },
+                "tooltip": [
+                    {
+                        "field": "properties.Name",
+                        "type": "nominal",
+                        "title": "State"
+                    },
+                    {
+                        "field": "Population_Density",
+                        "type": "quantitative",
+                        "title": "Population Density",
+                        "format": ".2f"
+                    },
+                    {
+                        "field": "Population",
+                        "type": "quantitative",
+                        "title": "Total Population",
+                        "format": ",.0f"
+                    }
+                ]
+            }
+        }
+    ]
+}

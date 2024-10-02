@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.container {
+  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.item {
+  flex: 1;
+  max-width: 49%;
+  border: 2px solid;
+  padding: 0px 5px 0px 5px;
+}
+
+.title {
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.visualization {
+  height: 400px;
+  width: 100%;
+}

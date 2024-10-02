@@ -1,0 +1,201 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 800,
+    "height": 600,
+    "title": "Analysis of Population in 2023 and Area (Per KM²)",
+    "data": {
+        "url": "https://raw.githubusercontent.com/jhannng/FIT3179-Homework-Assessment-9/main/data/population_state.csv",
+        "format": {
+            "type": "csv"
+        }
+    },
+    "transform": [
+        {
+            "calculate": "datum.Population / datum.Area",
+            "as": "Population_Density"
+        },
+        {
+            "calculate": "datum.State + ': ' + format(datum.Population_Density, ',.2f') + ' people/km²'",
+            "as": "Annotation"
+        }
+    ],
+    "params": [
+        {
+            "name": "StateFilter",
+            "value": "All",
+            "bind": {
+                "input": "select",
+                "options": [
+                    "All",
+                    "Johor",
+                    "Kedah",
+                    "Kelantan",
+                    "Melaka",
+                    "Negeri Sembilan",
+                    "Pahang",
+                    "Perak",
+                    "Perlis",
+                    "Pulau Pinang",
+                    "Sabah",
+                    "Sarawak",
+                    "Selangor",
+                    "Terengganu",
+                    "W.P. Kuala Lumpur",
+                    "W.P. Labuan",
+                    "W.P. Putrajaya"
+                ],
+                "labels": [
+                    "All States",
+                    "Johor",
+                    "Kedah",
+                    "Kelantan",
+                    "Melaka",
+                    "Negeri Sembilan",
+                    "Pahang",
+                    "Perak",
+                    "Perlis",
+                    "Pulau Pinang",
+                    "Sabah",
+                    "Sarawak",
+                    "Selangor",
+                    "Terengganu",
+                    "Kuala Lumpur",
+                    "Labuan",
+                    "Putrajaya"
+                ],
+                "name": "Select State: "
+            }
+        }
+    ],
+    "layer": [
+        {
+            "transform": [
+                {
+                    "filter": "StateFilter == 'All' || datum.State == StateFilter"
+                }
+            ],
+            "mark": "point",
+            "encoding": {
+                "x": {
+                    "field": "Area",
+                    "type": "quantitative",
+                    "axis": {
+                        "title": "Area (km²)",
+                        "format": ",.0f",
+                        "tickCount": 7,
+                        "grid": true,
+                        "gridOpacity": 0.5,
+                        "labelAlign": "center",
+                        "labelBaseline": "top",
+                        "labelPadding": 4
+                    },
+                    "scale": {
+                        "type": "log",
+                        "nice": true
+                    }
+                },
+                "y": {
+                    "field": "Population",
+                    "type": "quantitative",
+                    "axis": {
+                        "title": "Population",
+                        "format": ",.0f",
+                        "tickCount": 7,
+                        "grid": true,
+                        "gridOpacity": 0.5,
+                        "labelAlign": "right",
+                        "labelBaseline": "middle",
+                        "labelPadding": 4
+                    },
+                    "scale": {
+                        "type": "log",
+                        "nice": true
+                    }
+                },
+                "size": {
+                    "field": "Population",
+                    "type": "quantitative",
+                    "title": "Population",
+                    "scale": {
+                        "type": "sqrt",
+                        "range": [
+                            20,
+                            1000
+                        ]
+                    }
+                },
+                "color": {
+                    "condition": {
+                        "param": "StateFilter",
+                        "field": "State",
+                        "type": "nominal"
+                    },
+                    "value": "lightgray"
+                },
+                "tooltip": [
+                    {
+                        "field": "State",
+                        "type": "nominal",
+                        "title": "State"
+                    },
+                    {
+                        "field": "Population",
+                        "type": "quantitative",
+                        "title": "Population",
+                        "format": ",.0f"
+                    },
+                    {
+                        "field": "Area",
+                        "type": "quantitative",
+                        "title": "Area (km²)",
+                        "format": ",.0f"
+                    },
+                    {
+                        "field": "Population_Density",
+                        "type": "quantitative",
+                        "title": "Population Density (per km²)",
+                        "format": ",.2f"
+                    }
+                ]
+            }
+        },
+        {
+            "mark": {
+                "type": "text",
+                "align": "left",
+                "baseline": "middle",
+                "dx": 5,
+                "dy": -10,
+                "fontSize": 11,
+                "fontStyle": "italic"
+            },
+            "encoding": {
+                "x": {
+                    "field": "Area",
+                    "type": "quantitative",
+                    "scale": {
+                        "type": "log"
+                    }
+                },
+                "y": {
+                    "field": "Population",
+                    "type": "quantitative",
+                    "scale": {
+                        "type": "log"
+                    }
+                },
+                "text": {
+                    "field": "Annotation",
+                    "type": "nominal"
+                },
+                "opacity": {
+                    "condition": {
+                        "test": "datum.State == 'W.P. Kuala Lumpur' || datum.State == 'Selangor' || datum.State == 'Sabah'",
+                        "value": 1
+                    },
+                    "value": 0
+                }
+            }
+        }
+    ]
+}
